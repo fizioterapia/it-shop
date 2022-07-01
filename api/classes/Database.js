@@ -53,6 +53,32 @@ class Database {
             COMMENT='';
             `);
         }
+
+        res = await this.query("SELECT count(*) FROM information_schema.TABLES WHERE TABLE_NAME = 'users' AND TABLE_SCHEMA in (SELECT DATABASE());");
+
+        // Result[index][keyName = count(*)] == 0 (which means that doesn't exist);
+        if (res[0][Object.keys(res[0])[0]] == 0) {
+            await this.query(`CREATE TABLE users (
+                id int(11) auto_increment NOT NULL,
+                username varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                password varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci NOT NULL,
+                salt varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                email varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                firstName varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                lastName varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                phoneNumber varchar(24) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                city varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                street varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                building varchar(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci DEFAULT NULL NULL,
+                admin tinyint(1) DEFAULT 0 NOT NULL,
+                CONSTRAINT \`PRIMARY\` PRIMARY KEY (id)
+            )
+            ENGINE=InnoDB
+            DEFAULT CHARSET=utf8mb4
+            COLLATE=utf8mb4_unicode_ci
+            COMMENT='';
+            `);
+        }
     }
 }
 
