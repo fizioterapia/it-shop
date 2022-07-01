@@ -8,9 +8,9 @@ class Database {
         this.config = config;
     }
 
-    async query(sql) {
+    async query(sql, ...args) {
         this.db = await mysql2.createConnection(this.config);
-        const [rows, fields] = await this.db.execute(sql);
+        const [rows, fields] = await this.db.execute(sql, args);
         await this.db.end();
 
         return rows;
