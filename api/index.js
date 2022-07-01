@@ -37,7 +37,7 @@ app.use("/user", user);
 
 // Wildcard
 app.all("*", (req, res) => {
-    res.status(401).send("Unauthorized");
+    res.status(401).json({error: "Unauthorized"});
 })
 
 // Listening

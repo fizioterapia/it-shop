@@ -15,27 +15,32 @@ router.get('/:itemID', async (req, res) => {
 });
 
 router.post('/add', async (req, res) => {
-    if (!req.body.token || !req.user.validate(req.body.token)) {
-        res.json({error: 'Invalid token.'});
-    } else if (!req.body.name || !req.body.price) {
-        res.json({error: 'Not all fields were filled'});
-    } else {
-        let imagePath = null;
-        if (req.files) {
-            let photo = req.files.photo;
-            imagePath = `./public/assets/images/${photo.name}`
+    try {
+        if (!req.body.token || !req.user.validate(req.body.token)) {
+            res.json({error: 'Invalid token.'});
+        } else if (!req.body.name || !req.body.price) {
+            res.json({error: 'Not all fields were filled'});
+        } else {
+            let imagePath = null;
+            if (req.files) {
+                let photo = req.files.photo;
+                imagePath = `./public/assets/images/${photo.name}`
 
-            photo.mv(imagePath);
+                photo.mv(imagePath);
+            }
+
+            await req.db.query("INSERT INTO products (name, price, description, image, categoryId) VALUES(?,?,?,?,?)",
+            req.body.name,
+            req.body.price,
+            req.body.desc,
+            imagePath,
+            req.body.category);
+
+            res.json({success: `Product ${req.body.name} added!`}); 
         }
-
-        await req.db.query("INSERT INTO products (name, price, description, image, categoryId) VALUES(?,?,?,?,?)",
-        req.body.name,
-        req.body.price,
-        req.body.desc,
-        imagePath,
-        req.body.category);
-
-        res.json({success: `Product ${req.body.name} added!`}); 
+    } catch(e) {
+        res.json({error: "Contact administrator."})
+        console.error(e);
     }
 });
 
