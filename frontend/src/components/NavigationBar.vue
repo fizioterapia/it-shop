@@ -6,10 +6,12 @@
         <div class="nav--links">
             <router-link to="/">Main</router-link>
             <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.id}`">{{category.name}}</router-link>
-            <router-link v-if="getUsername == ''" to="/login">Login</router-link>
-            <router-link v-if="getUsername == ''" to="/register">Register</router-link>
+            <router-link v-if="!isAuthenticated" to="/login">Login</router-link>
+            <router-link v-if="!isAuthenticated" to="/register">Register</router-link>
             <div v-else>
                 {{ getUsername }}
+                <router-link to="/user">UCP</router-link>
+                <router-link v-if="isAdmin" to="/admin">Admin</router-link> 
                 <a href="#" @click.prevent="logout()">Logout</a>
             </div>
         </div>
@@ -26,7 +28,7 @@ export default {
         }
     },
     computed: {
-        ...mapGetters(['getUsername'])
+        ...mapGetters(['getUsername', 'isAuthenticated', 'isAdmin'])
     },
     methods: {
         ...mapActions(['Logout']),

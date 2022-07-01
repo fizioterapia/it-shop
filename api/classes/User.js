@@ -39,11 +39,11 @@ class User {
     async login(username, password) {
         try {
             if (!username || !password || typeof username != "string" || typeof password != "string") throw "Not valid parameters";
-            const passwordSalt = await this.db.query("SELECT password FROM users WHERE `username` = ?", username);
+            const res = await this.db.query("SELECT password, admin FROM users WHERE `username` = ?", username);
 
-            if(passwordSalt.length > 0 && passwordSalt[0].password) {
-                if(await this.comparePassword(password, passwordSalt[0].password)) {
-                    return {token: this.createToken({username: username})};
+            if(res.length > 0 && res[0].password) {
+                if(await this.comparePassword(password, res[0].password)) {
+                    return {token: this.createToken({username: username}), admin: res[0].admin};
                 } else {
                     throw "Incorrect username or password";
                 }
@@ -67,7 +67,7 @@ class User {
                 const hashedPassword = await this.hashPassword(password);
 
                 await this.db.query("INSERT INTO `users` (username, password, salt, email) VALUES(?,?,?,?)", username, hashedPassword.hash, hashedPassword.salt, email);
-                return {token: this.createToken({username: username})};
+                return {token: this.createToken({username: username}), admin: false};
             } else {
                 throw "This username is already taken."
             }
@@ -79,11 +79,13 @@ class User {
     }
 
     async validate(token) {
+        if (!token || token == "") return false;
+
         return new Promise((resolve, reject) => {
-            jwt.verify(token, CONFIG.token_secret, (err, user) => {       
+            jwt.verify(token, this.secret, (err, user) => {       
                 if (err) return reject(false);
             
-                resolve(true);
+                resolve(user);
             })
         });
     }
