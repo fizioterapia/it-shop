@@ -15,6 +15,12 @@
                 <a href="#" @click.prevent="logout()">Logout</a>
             </div>
         </div>
+        <div class="nav--links nav--cp">
+            <router-link to="/user/orders">Orders</router-link>
+            <router-link to="/user/settings">Settings</router-link>
+            <router-link v-if="isAdmin" to="/admin/addcategory">Add Category</router-link> 
+            <router-link v-if="isAdmin" to="/admin/additems">Add Items</router-link> 
+        </div>
     </nav>
 </template>
 

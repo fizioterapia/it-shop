@@ -5,7 +5,11 @@ import ItemView from '../views/ItemView.vue';
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
 import UserView from '../views/UserView.vue';
+import UserSettings from '../views/UserSettings.vue';
+import UserOrders from '../views/UserOrders.vue';
 import AdminView from '../views/AdminView.vue';
+import AdminAddCategory from '../views/AdminAddCategory.vue';
+import AdminAddItems from '../views/AdminAddItems.vue';
 import store from '../store';
 
 const routes = [
@@ -33,12 +37,32 @@ const routes = [
   {
     path: '/user',
     component: UserView,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
+    children: [
+      {
+        path: 'settings',
+        component: UserSettings
+      },
+      {
+        path: 'orders',
+        component: UserOrders
+      }
+    ]
   },
   {
     path: '/admin',
     component: AdminView,
-    meta: { requiresAuth: true, admin: true }
+    meta: { requiresAuth: true, admin: true },
+    children: [
+      {
+        path: 'addcategory',
+        component: AdminAddCategory
+      },
+      {
+        path: 'additems',
+        component: AdminAddItems
+      }
+    ]
   }
 ]
 
