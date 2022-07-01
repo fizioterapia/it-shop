@@ -4,6 +4,8 @@ import CategoryView from '../views/CategoryView.vue';
 import ItemView from '../views/ItemView.vue';
 import LoginView from '../views/LoginView.vue';
 import RegisterView from '../views/RegisterView.vue';
+import CartView from '../views/CartView.vue';
+
 import UserView from '../views/UserView.vue';
 import UserSettings from '../views/UserSettings.vue';
 import UserOrders from '../views/UserOrders.vue';
@@ -33,6 +35,10 @@ const routes = [
   {
     path: '/register',
     component: RegisterView
+  },
+  {
+    path: '/cart',
+    component: CartView
   },
   {
     path: '/user',

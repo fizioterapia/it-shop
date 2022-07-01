@@ -13,7 +13,8 @@
         </div>
         <div class="column">
             <div class="item-view--price">
-                {{data.price}} USD
+                {{data.price}} USD<br>
+                <button @click.prevent="add" type="submit">Add To Cart</button>
             </div>
             <div class="item-view--description">
                 {{data.description || 'No description'}}
@@ -23,7 +24,8 @@
 </template>
 
 <script>
-    module.exports = {
+import { mapActions } from 'vuex';
+    export default {
         data() {
             return {
                 itemId: 0,
@@ -36,6 +38,7 @@
             }
         },
         methods: {
+            ...mapActions(['addToCart']),
             async updateItem() {
                 this.itemId = this.$route.params.itemId;
 
@@ -43,6 +46,9 @@
                 const data = await res.json();
 
                 this.data = data[0];
+            },
+            async add() {
+                await this.addToCart(this.$route.params.itemId);
             }
         },
         async mounted() {
