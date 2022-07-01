@@ -51,18 +51,15 @@ class User {
                 throw "Incorrect username or password";
             }
         } catch (e) {
-            console.log(e);
             return {error: e};
         }
     }
 
     async register(username, password, email) {
         try {
-            console.log(username, password, email);
             if (!username || !password || typeof username != "string" || typeof password != "string") throw "Not valid parameters";
 
             const res = await this.db.query("SELECT COUNT(*) FROM users WHERE `username` = ?", username);
-            console.log(res[0][Object.keys(res[0])[0]]);
             if (res[0][Object.keys(res[0])[0]] == 0) {
                 const hashedPassword = await this.hashPassword(password);
 
@@ -73,7 +70,76 @@ class User {
             }
 
         } catch (e) {
-            console.log(e);
+            return {error: e};
+        }
+    }
+
+    async retrieveData(token, username) {
+        try {
+            if (await this.validate(token) == false) throw "Contact administrator."
+            if (await !username || username == "") throw "Contact administrator."
+
+            const res = await this.db.query("SELECT email, firstName, lastName, phoneNumber, city, street, building FROM `users` WHERE `username` = ?", username);         
+            
+            return res[0];   
+        } catch(e) {
+            return {error: e};
+        }
+    }
+
+    async updateData(req) {
+        try {
+            if (await this.validate(req.body.token) == false) throw "Contact administrator."
+            if (!req.body.username || req.body.username == "") throw "Contact administrator."
+
+            if (req.body.password) {
+                const newPassword = await this.hashPassword(req.body.password);
+
+                const res = await this.db.query(`
+                    UPDATE users
+                    SET password=?,
+                    salt=?,
+                    email=?,
+                    firstName=?,
+                    lastName=?,
+                    phoneNumber=?,
+                    city=?,
+                    street=?,
+                    building=?
+                    WHERE username=?;
+                `, newPassword.hash,
+                newPassword.salt,
+                req.body.email,
+                req.body.firstName,
+                req.body.lastName,
+                req.body.phoneNumber,
+                req.body.city,
+                req.body.street,
+                req.body.building,
+                req.body.username);   
+            } else {
+                const res = await this.db.query(`
+                    UPDATE users
+                    SET email=?,
+                    firstName=?,
+                    lastName=?,
+                    phoneNumber=?,
+                    city=?,
+                    street=?,
+                    building=?
+                    WHERE username=?;
+                `, req.body.email,
+                req.body.firstName,
+                req.body.lastName,
+                req.body.phoneNumber,
+                req.body.city,
+                req.body.street,
+                req.body.building,
+                req.body.username);  
+            }
+       
+            return {success: "Account updated."};   
+        } catch(e) {
             return {error: e};
         }
     }

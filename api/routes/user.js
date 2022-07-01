@@ -2,6 +2,14 @@ const { json } = require('body-parser');
 const express = require('express')
 const router = express.Router()
 
+router.post("/getdata", async (req, res) => {
+    res.json(await req.user.retrieveData(req.body.token, req.body.username));
+})
+
+router.post("/setdata", async (req, res) => {
+    res.json(await req.user.updateData(req));
+})
+
 router.post("/login", async (req, res) => {
     res.json(await req.user.login(req.body.login, req.body.password));
 });

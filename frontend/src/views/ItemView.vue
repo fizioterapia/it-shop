@@ -51,8 +51,6 @@
                 const res = await axios.get(`http://localhost:3000/items/${this.itemId}`);
                 const data = await res.data;
 
-                console.log(res);
-
                 this.data = data[0];
             },
             async add() {

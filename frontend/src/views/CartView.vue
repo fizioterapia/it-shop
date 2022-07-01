@@ -46,10 +46,7 @@
                 const cart = this.getCart;
 
                 cart.forEach(async (elem) => {
-                    console.log(elem);
-
                     const res = await fetch(`http://localhost:3000/items/${elem.itemId}`);
-                    console.log(`http://localhost:3000/items/${elem.itemId}`);
                     let data = await res.json();
                     data = data[0];
                     data.count = elem.count;

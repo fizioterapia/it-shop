@@ -21,7 +21,6 @@ const actions = {
 
     },
     async Login({commit}, user) {
-        console.log(user);
         const res = await axios.post('http://localhost:3000/user/login', user);
         if (res.data.error) throw res.data.error;
 
@@ -32,7 +31,6 @@ const actions = {
         }
     },
     async Register({commit}, user) {
-        console.log(user);
         const res = await axios.post('http://localhost:3000/user/register', user);
         if (res.data.error) throw res.data.error;
 

@@ -45,8 +45,6 @@ const mutations = {
     removeFromCart(state, item) {
         let itemId = findItem(item, state.cartItems);
 
-        console.log(itemId, item, state.cartItems);
-
         if (itemId >= 0) {
             state.cartItems[itemId].count = state.cartItems[itemId].count - 1;
 

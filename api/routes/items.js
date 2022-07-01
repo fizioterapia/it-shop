@@ -10,7 +10,6 @@ router.get('/:itemID', async (req, res) => {
         let rows = await req.db.query("SELECT products.*, categories.name as categoryName from products INNER JOIN categories ON products.categoryId = categories.id WHERE products.id = ?", req.params.itemID)
         res.json(rows);
     } catch (e) {
-        console.log(e);
         res.json({error: "Not a number!"});
     }
 });
