@@ -8,6 +8,8 @@
 
 <script>
     import ShopItem from "../components/ShopItem.vue"
+    import axios from 'axios';
+
     export default {
         components: {
             ShopItem
@@ -17,19 +19,22 @@
                 items: []
             }
         },
-        watch: {
-            '$route.params.categoryId': function () {
-                this.updateItems();
-            }
+        async created() {
+            this.$watch(
+                () => this.$route.params?.categoryId,
+                async () => {
+                    await this.updateItems();
+                },
+            )
         },
         methods: {
             async updateItems() {
-                const res = await fetch(`http://localhost:3000/categories/items/${this.$route.params.categoryId}`);
-                this.items = await res.json();
+                const res = await axios.get(`http://localhost:3000/categories/items/${this.$route.params.categoryId}`);
+                this.items = await res.data;
             }
         },
         async mounted() {
-            this.updateItems();
+            await this.updateItems();
         },
     }
 </script>

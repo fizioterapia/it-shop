@@ -24,7 +24,9 @@
 </template>
 
 <script>
-import { mapActions } from 'vuex';
+    import { mapActions } from 'vuex';
+    import axios from 'axios';
+
     export default {
         data() {
             return {
@@ -32,18 +34,24 @@ import { mapActions } from 'vuex';
                 data: []
             }
         },
-        watch: {
-            '$route.params.itemId': function () {
-                this.updateItem();
-            }
+        async created() {
+            this.$watch(
+                () => this.$route.params?.itemId,
+                async () => {
+                    await this.updateItem();
+                },
+            )
         },
         methods: {
             ...mapActions(['addToCart']),
             async updateItem() {
+                if(isNaN(this.$route.params.itemId)) return false;
                 this.itemId = this.$route.params.itemId;
 
-                const res = await fetch(`http://localhost:3000/items/${this.$route.params.itemId}`);
-                const data = await res.json();
+                const res = await axios.get(`http://localhost:3000/items/${this.itemId}`);
+                const data = await res.data;
+
+                console.log(res);
 
                 this.data = data[0];
             },
@@ -52,7 +60,7 @@ import { mapActions } from 'vuex';
             }
         },
         async mounted() {
-            this.updateItem();
+            await this.updateItem();
         }
     }
 </script>

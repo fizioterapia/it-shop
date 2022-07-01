@@ -27,6 +27,7 @@
 </template>
 
 <script>
+import axios from 'axios';
 import { mapGetters, mapActions } from "vuex";
 import CartBadge from "./CartBadge.vue";
 
@@ -50,9 +51,8 @@ export default {
         }
     },
     async mounted() {
-        const response = await fetch("http://localhost:3000/categories");
-        console.log(response);
-        this.categories = await response.json();
+        const response = await axios.get("http://localhost:3000/categories");
+        this.categories = response.data;
     }
 }
 </script>
