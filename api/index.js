@@ -1,6 +1,7 @@
 const CONFIG = require("./config/config.json");
 const express = require("express");
 const cors = require('cors');
+const fileUpload = require('express-fileupload');
 
 const categories = require("./routes/categories.js");
 const items = require("./routes/items.js");
@@ -19,6 +20,9 @@ app.use(cors());
 app.use('/public', express.static('public'))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
+app.use(fileUpload({
+    createParentPath: true
+}));
 app.use(async (req, res, next) => {
     req.db = DB;
     req.user = USER;

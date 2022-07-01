@@ -8,7 +8,7 @@
                 {{data.categoryName}}
             </div>
             <div class="item-view--image">
-                <img :src="data.image || 'http://localhost:3000/public/assets/images/default.png'" class="item-view--image" />
+                <img :src="data.image ? `http://localhost:3000/${data.image}` : 'http://localhost:3000/public/assets/images/default.png'" class="item-view--image" />
             </div>
         </div>
         <div class="column">
@@ -30,13 +30,23 @@
                 data: []
             }
         },
+        watch: {
+            '$route.params.itemId': function () {
+                this.updateItem();
+            }
+        },
+        methods: {
+            async updateItem() {
+                this.itemId = this.$route.params.itemId;
+
+                const res = await fetch(`http://localhost:3000/items/${this.$route.params.itemId}`);
+                const data = await res.json();
+
+                this.data = data[0];
+            }
+        },
         async mounted() {
-            this.itemId = this.$route.params.itemId;
-
-            const res = await fetch(`http://localhost:3000/items/${this.itemId}`);
-            const data = await res.json();
-
-            this.data = data[0];
+            this.updateItem();
         }
     }
 </script>

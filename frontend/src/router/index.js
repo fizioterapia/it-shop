@@ -86,9 +86,9 @@ router.beforeEach(async (to, from, next) => {
       return;
     }
     next("/login");
+  } else {
+    next();
   }
-
-  next();
 });
 
 export default router;

@@ -14,15 +14,22 @@
         },
         data() {
             return {
-                categoryId: 0,
                 items: []
             }
         },
+        watch: {
+            '$route.params.categoryId': function () {
+                this.updateItems();
+            }
+        },
+        methods: {
+            async updateItems() {
+                const res = await fetch(`http://localhost:3000/categories/items/${this.$route.params.categoryId}`);
+                this.items = await res.json();
+            }
+        },
         async mounted() {
-            this.categoryId = this.$route.params.categoryId
-
-            const res = await fetch(`http://localhost:3000/categories/items/${this.categoryId}`);
-            this.items = await res.json();
-        }
+            this.updateItems();
+        },
     }
 </script>

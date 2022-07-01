@@ -12,7 +12,10 @@ router.get('/items/:categoryId', async (req, res) => {
 })
 
 router.post('/add', async (req, res) => {
-    if (!req.body.name) {
+    if (!req.body.token || !req.user.validate(req.body.token)) {
+        res.json({error: 'Invalid token.'});
+    }
+    else if (!req.body.name) {
         res.json({error: 'Not all fields were filled'});
     } else {
         await req.db.query("INSERT INTO categories (name) VALUES(?)", req.body.name);
