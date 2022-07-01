@@ -7,6 +7,7 @@
             <router-link to="/">Main</router-link>
             <router-link v-for="category in categories" :key="category.id" :to="`/category/${category.id}`">{{category.name}}</router-link>
             <router-link v-if="getUsername == ''" to="/login">Login</router-link>
+            <router-link v-if="getUsername == ''" to="/register">Register</router-link>
             <div v-else>
                 {{ getUsername }}
                 <a href="#" @click.prevent="logout()">Logout</a>

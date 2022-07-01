@@ -19,6 +19,16 @@ const actions = {
             await commit('setUsername', user.login);
         }
     },
+    async Register({commit}, user) {
+        console.log(user);
+        const res = await axios.post('http://localhost:3000/user/register', user);
+        if (res.data.error) throw res.data.error;
+
+        if (res.data.token) {
+            await commit('setToken', res.data.token);
+            await commit('setUsername', user.login);
+        }
+    },
     async Logout({commit}) {
         await commit('setToken', '');
         await commit('setUsername', '');
