@@ -25,22 +25,6 @@ app.use(async (req, res, next) => {
 
     next();
 })
-app.use(async (req, res, next) =>  {
-    const authHeader = req.headers['authorization']
-    const token = authHeader && authHeader.split(' ')[1]
-  
-    if (token != null) {
-        jwt.verify(token, CONFIG.token_secret, (err, user) => {       
-            if (err) return res.sendStatus(403);
-        
-            req.user = user;
-        
-            next();
-        })
-    } else {
-        next();
-    }
-})
 
 // Routes
 app.use("/categories", categories);
