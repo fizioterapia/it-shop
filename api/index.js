@@ -1,5 +1,6 @@
 const CONFIG = require("./config/config.json");
 const express = require("express");
+const cors = require('cors');
 
 const categories = require("./routes/categories.js");
 const items = require("./routes/items.js");
@@ -14,12 +15,14 @@ const USER = new User(DB, CONFIG.app.token_secret);
 const app = express();
 
 // Middleware
+app.use(cors());
+app.use('/public', express.static('public'))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(async (req, res, next) => {
     req.db = DB;
     req.user = USER;
-    
+
     next();
 })
 app.use(async (req, res, next) =>  {
