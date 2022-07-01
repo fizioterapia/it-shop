@@ -12,15 +12,18 @@
                 {{item.count}} <br />
                 <button @click.prevent="remove(item.id)" type="submit">Remove from cart</button>
             </li>
+            <button type="submit" @click="buy">Checkout</button>
         </ul>
         <h2 v-else>
             Nothing inside!
         </h2>
+        
     </div>
 </template>
 
 <script>
     import { mapGetters, mapActions } from 'vuex';
+    import axios from 'axios';
 
     export default {
         data() {
@@ -34,7 +37,7 @@
             }
         },
         computed: {
-            ...mapGetters(['getCart', 'getCartAmount'])
+            ...mapGetters(['getCart', 'getCartAmount', 'isAuthenticated', 'getUsername', 'getToken'])
         },
         async mounted() {
             this.getItemsInfo();
@@ -56,6 +59,14 @@
             },
             remove(id) {
                 this.removeFromCart(id);
+            },
+            async buy() {
+                if(!this.isAuthenticated) {
+                    this.$router.push('/login');
+                }
+
+                const res = await axios.post(`http://localhost:3000/user/checkout`, {token: this.getToken, username: this.getUsername, items: this.getCart});
+                console.log(res);
             }
         }
     }

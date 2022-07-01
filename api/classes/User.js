@@ -155,6 +155,45 @@ class User {
             })
         });
     }
+
+    async checkout(body) {
+        try {
+            if (await this.validate(body.token) == false) throw "Contact administrator."
+            if (!body.username || body.username == "") throw "Contact administrator."
+
+            const data = JSON.stringify(body.items);
+
+            body.items.forEach(async (elem) => {
+                const res = await this.db.query("SELECT sold FROM products WHERE id = ?", elem.itemId);
+                let sold = res[0].sold + elem.count;
+                await this.db.query("UPDATE products SET sold = ? WHERE id = ?", sold, elem.itemId)
+            })
+
+            const res = await this.db.query("SELECT id FROM users WHERE `username` = ?", body.username);
+            this.db.query("INSERT INTO orders(`order`, orderedBy) VALUES(?, ?)", data, res[0].id)
+
+            return {success: "You bought the stuff!"}
+        } catch(e) {
+            return {error: e}
+        }
+    }
+
+    async orders(body) {
+        console.log(body)
+        try {
+            if (await this.validate(body.token) == false) throw "Contact administrator."
+            if (!body.username || body.username == "") throw "Contact administrator."
+
+            const res = await this.db.query("SELECT id FROM users WHERE `username` = ?", body.username);
+            const items = await this.db.query("SELECT `order`, orderedAt FROM `orders` WHERE `orderedBy` = ?", res[0].id);
+
+            console.log(items);
+
+            return items;
+        } catch(e) {
+            return {error: e}
+        }
+    }
 }
 
 module.exports = User;

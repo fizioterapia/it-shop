@@ -8,9 +8,9 @@ Application built using Node.js, Express.js, Vue.js 3 and MySQL
 
 ## Todo
  - ~~add users to db~~ (done)
- - add featured items
+ - add featured items (in progress)
  - ~~implement cart~~ (done)
  - finish home page
- - implement UCP (in progress)
- - implement ACP (in progress)
+ - ~~implement UCP~~ (done)
+ - ~~implement ACP~~ (done)
  - create better look for website

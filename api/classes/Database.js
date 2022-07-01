@@ -86,6 +86,23 @@ class Database {
                 COMMENT='';
                 `);
             }
+
+            res = await this.query("SELECT count(*) FROM information_schema.TABLES WHERE TABLE_NAME = 'orders' AND TABLE_SCHEMA in (SELECT DATABASE());");
+
+            // Result[index][keyName = count(*)] == 0 (which means that doesn't exist);
+            if (res[0][Object.keys(res[0])[0]] == 0) {
+                await this.query(`CREATE TABLE orders (
+                    id int auto_increment NULL,
+                    \`order\` varchar(1024) NOT NULL,
+                    orderedAt varchar(100) DEFAULT UNIX_TIMESTAMP() NULL,
+                    orderedBy int NOT NULL,
+                    CONSTRAINT orders_PK PRIMARY KEY (id)
+                )
+                ENGINE=InnoDB
+                DEFAULT CHARSET=utf8mb4
+                COLLATE=utf8mb4_unicode_ci;
+                `)
+            }
         } catch(e) {
             console.error(e);
         }

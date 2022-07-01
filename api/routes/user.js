@@ -47,4 +47,22 @@ router.post("/validate", async (req, res) => {
     }
 })
 
+router.post("/checkout", async (req, res) => {
+    try {
+        res.json(await req.user.checkout(req.body));
+    } catch(e) {
+        res.json({error: "Contact administrator!"});
+        console.error(e);
+    }
+})
+
+router.post("/orders", async (req, res) => {
+    try {
+        res.json(await req.user.orders(req.body));
+    } catch(e) {
+        res.json({error: "Contact administrator!"});
+        console.error(e);
+    }
+})
+
 module.exports = router;
