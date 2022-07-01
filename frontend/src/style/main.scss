@@ -1,0 +1,12 @@
+@import "_nav.scss";
+@import "_category.scss";
+@import "_itemview.scss";
+
+body, html, #app {
+    margin: 0px;
+}
+
+#app {
+    display: flex;
+    flex-direction: column;
+}

@@ -1,0 +1,35 @@
+nav {
+    display: flex;
+    margin: 8px;
+    padding: 16px 32px;
+    box-sizing: border-box;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 100%;
+
+    background: #dadada;
+    border-radius: 4px;
+
+    .nav--name {
+        font-size: 1.5em;
+        font-weight: 600;
+    }
+
+    .nav--links {
+        display: flex;
+        align-items: center;
+        a {
+            margin: 0 8px;
+            background: #bababa;
+            padding: 8px 16px;
+            border-radius: 4px;
+            color: black;
+            text-decoration: none;
+        }
+
+        .router-link-active {
+            background: #bacaba;
+        }
+    }
+}
