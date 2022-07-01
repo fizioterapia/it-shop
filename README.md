@@ -7,9 +7,10 @@ Application built using Node.js, Express.js, Vue.js 3 and MySQL
  - Front-end (simple front-end without user operations and displaying items from database)
 
 ## Todo
- - add users to db
+ - ~~add users to db~~ (done)
  - add featured items
  - implement cart
  - finish home page
- - implement UCP
- - implement ACP
+ - implement UCP (in progress)
+ - implement ACP (in progress)
+ - create better look for website
