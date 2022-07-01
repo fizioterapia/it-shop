@@ -11,4 +11,13 @@ router.get('/items/:categoryId', async (req, res) => {
     res.json(rows);
 })
 
+router.post('/add', async (req, res) => {
+    if (!req.body.name) {
+        res.json({error: 'Not all fields were filled'});
+    } else {
+        await req.db.query("INSERT INTO categories (name) VALUES(?)", req.body.name);
+        res.json({success: `Category ${req.body.name} added!`}); 
+    }
+});
+
 module.exports = router;
