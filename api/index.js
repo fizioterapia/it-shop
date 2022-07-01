@@ -18,10 +18,8 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(async (req, res, next) => {
     req.db = DB;
-    next();
-})
-app.use(async (req, res, next) => {
     req.user = USER;
+    
     next();
 })
 app.use(async (req, res, next) =>  {
