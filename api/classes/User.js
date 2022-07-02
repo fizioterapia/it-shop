@@ -27,7 +27,7 @@ class User {
                 if (result) {
                    resolve(true);
                }
-               reject(false);
+               reject("Incorrect Password");
             });
         })
     }
@@ -179,7 +179,6 @@ class User {
     }
 
     async orders(body) {
-        console.log(body)
         try {
             if (await this.validate(body.token) == false) throw "Contact administrator."
             if (!body.username || body.username == "") throw "Contact administrator."
