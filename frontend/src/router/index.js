@@ -22,27 +22,33 @@ const routes = [
   },
   {
     path: '/category/:categoryId',
+    name: 'category',
     component: CategoryView
   },
   {
     path: '/items/:itemId',
+    name: 'item',
     component: ItemView
   },
   {
     path: '/login',
+    name: 'login',
     component: LoginView
   },
   {
     path: '/register',
+    name: 'register',
     component: RegisterView
   },
   {
     path: '/cart',
+    name: 'cart',
     component: CartView
   },
   {
     path: '/user',
     component: UserView,
+    name: 'ucp',
     meta: { requiresAuth: true },
     children: [
       {
@@ -58,6 +64,7 @@ const routes = [
   {
     path: '/admin',
     component: AdminView,
+    name: 'acp',
     meta: { requiresAuth: true, admin: true },
     children: [
       {
