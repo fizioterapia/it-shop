@@ -14,6 +14,7 @@ Application built using Node.js, Express.js, Vue.js 3 and MySQL
  - ~~implement UCP~~ (done)
  - ~~implement ACP~~ (done)
  - create better look for website
+ - refactor API (add userid to token, proper validating, restructurize routes and more).
 
 ## Current Goals
 I will be soon implementing new look for shop which won't be looking like 1999 search engines.  
