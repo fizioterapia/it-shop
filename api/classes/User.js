@@ -39,11 +39,11 @@ class User {
     async login(username, password) {
         try {
             if (!username || !password || typeof username != "string" || typeof password != "string") throw "Not valid parameters";
-            const res = await this.db.query("SELECT password, admin FROM users WHERE `username` = ?", username);
+            const res = await this.db.query("SELECT id, password, admin FROM users WHERE `username` = ?", username);
 
             if(res.length > 0 && res[0].password) {
                 if(await this.comparePassword(password, res[0].password)) {
-                    return {token: this.createToken({username: username}), admin: res[0].admin};
+                    return {token: this.createToken({username: username, id: res[0].id}), admin: res[0].admin};
                 } else {
                     throw "Incorrect username or password";
                 }
@@ -63,8 +63,10 @@ class User {
             if (res[0][Object.keys(res[0])[0]] == 0) {
                 const hashedPassword = await this.hashPassword(password);
 
-                await this.db.query("INSERT INTO `users` (username, password, salt, email) VALUES(?,?,?,?)", username, hashedPassword.hash, hashedPassword.salt, email);
-                return {token: this.createToken({username: username}), admin: false};
+                await this.db.query("INSERT INTO `users` (username, password, salt, email) VALUES(?,?,?,?);", username, hashedPassword.hash, hashedPassword.salt, email);
+                let req = await this.db.query("SELECT id from `users` WHERE username = ?", username);
+
+                return {token: this.createToken({username: username, id: req[0].id}), admin: false};
             } else {
                 throw "This username is already taken."
             }
