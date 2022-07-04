@@ -22,6 +22,9 @@ try {
 const User = require("./src/classes/User");
 const userInstance = new User(dbInstance, CONFIG.app.token_secret);
 
+const Categories = require("./src/classes/Categories");
+const Items = require("./src/classes/Items");
+
 const response = require("./src/helpers/createResponse");
 
 const app = express();
@@ -39,11 +42,25 @@ app.use(async (req, res, next) => {
     req.helpers = {
         db: dbInstance,
         user: userInstance,
+        items: Items,
+        categories: Categories,
         response: response
     }
 
     next();
-})
+});
+
+app.use(async (req, res, next) => {
+    const authHeader = req.headers['authorization']
+    const token = authHeader && authHeader.split(' ')[1]
+
+    const result = await userInstance.validate(token);
+
+    if (result)
+        req.user = result;
+
+    next();
+});
 
 app.use('/categories', categories);
 app.use('/items', items);

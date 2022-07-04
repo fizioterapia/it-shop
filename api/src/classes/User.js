@@ -28,7 +28,7 @@ class User {
         try {
             return new Promise((resolve, reject) => {
                 bcrypt.compare(password, hash, function(err, result) {
-                    if (err) console.error(err);
+                    if (err) throw err;
                     if (result) {
                     resolve(true);
                 }
@@ -46,6 +46,18 @@ class User {
         } catch(e) {
             return response("error", e);
         }
+    }
+
+    async validate(token) {
+        if (!token || token == "") return false;
+
+        return new Promise((resolve, reject) => {
+            jwt.verify(token, this.secret, (err, user) => {       
+                if (err) return reject(false);
+            
+                resolve(user);
+            })
+        });
     }
 
     async login(username, password) {
@@ -66,7 +78,7 @@ class User {
         }
     }
 
-    async register(username, password, email) {
+    async register(username, email, password) {
         try {
             if (!username || !password || typeof username != "string" || typeof password != "string")
                 throw "Not valid parameters";
@@ -91,8 +103,11 @@ class User {
         }
     }
 
-    async retrieveData(id) {
+    async retrieveData(user) {
         try {
+            if (!user || !user.id)
+                throw "Unauthorized"
+
             const query = await this.db.query("SELECT email, firstName, lastName, phoneNumber, city, street, building FROM `users` WHERE `id` = ?", id);         
             const results = query.rows[0];
 
@@ -102,16 +117,22 @@ class User {
         }
     }
 
-    async updateData() {
+    async updateData(user, body) {
         try {
+            if (!user || !user.id)
+                throw "Unauthorized"
+
             throw "Not implemented yet..."
         } catch(e) {
             return response("error", e);
         }
     }
 
-    async getOrder(id) {
+    async getOrder(user, id) {
         try {
+            if (!user || !user.id)
+                throw "Unauthorized"
+
             const query = await this.db.query("SELECT `order`, orderedAt FROM `orders` WHERE `orderedBy` = ? AND `id` = ?", req.user.id, id);
             const items = query.rows[0];
 
@@ -121,8 +142,11 @@ class User {
         }
     }
 
-    async getOrders() {
+    async getOrders(user) {
         try {
+            if (!user || !user.id)
+                throw "Unauthorized"
+
             const query = await this.db.query("SELECT `order`, orderedAt FROM `orders` WHERE `orderedBy` = ?", req.user.id);
             const items = query.rows;
 
@@ -132,8 +156,11 @@ class User {
         }
     }
 
-    async checkout() {
+    async checkout(user) {
         try {
+            if (!user || !user.id)
+                throw "Unauthorized"
+
             const data = JSON.stringify(body.items);
 
             body.items.forEach(async (elem) => {
